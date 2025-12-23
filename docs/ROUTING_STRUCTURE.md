@@ -40,6 +40,7 @@
 ## Module Routes Structure
 
 ### Inbox Module
+
 ```
 /inbox
 ├── GET /inbox                    → InboxList (pages/Inbox/InboxList.tsx)
@@ -48,6 +49,7 @@
 ```
 
 ### Lead Management Module
+
 ```
 /lead-management
 ├── GET /lead-management                     → LeadList (pages/LeadManagement/LeadList.tsx)
@@ -356,6 +358,7 @@ Authed    Not Authed       │
 ## Best Practices Summary
 
 ### ✅ DO
+
 - Use module routes for feature-specific routes
 - Lazy load all page components
 - Mark protected routes with `protected: true`
@@ -366,6 +369,7 @@ Authed    Not Authed       │
 - Test all routes thoroughly
 
 ### ❌ DON'T
+
 - Add routes directly in App.tsx
 - Forget to export from module index
 - Use inconsistent URL naming
@@ -377,12 +381,14 @@ Authed    Not Authed       │
 ## Quick Reference
 
 ### Add Route to Existing Module
+
 1. Open `routes/modules/your-module.tsx`
 2. Add lazy import
 3. Add route config
 4. Done ✅
 
 ### Create New Module
+
 1. Create `routes/modules/your-module.tsx`
 2. Define routes
 3. Export from `modules/index.ts`
@@ -390,6 +396,7 @@ Authed    Not Authed       │
 5. Done ✅
 
 ### Create Page Component
+
 1. Create `pages/ModuleName/YourPage.tsx`
 2. Add performance hooks
 3. Export from `pages/ModuleName/index.ts`
@@ -398,11 +405,12 @@ Authed    Not Authed       │
 ---
 
 **Legend:**
+
 - 📂 Directory
 - 📖 Documentation
 - ⚡ Quick Guide
 - 📤 Exports
-- ⚙️  Configuration
+- ⚙️ Configuration
 - 🔀 Router
 - 📝 Types
 - 💡 Examples
@@ -410,8 +418,8 @@ Authed    Not Authed       │
 - 👥 Lead Management Module
 - 📋 List View
 - 📄 Detail View
-- ✍️  Form/Compose
+- ✍️ Form/Compose
 - ➕ Create
-- ✏️  Edit
+- ✏️ Edit
 - 📥 Import
 - 📤 Export
