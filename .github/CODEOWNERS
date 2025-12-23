@@ -1,0 +1,105 @@
+# CODEOWNERS
+# This file defines code ownership and automatic review assignments
+# Each line is a file pattern followed by one or more owners
+# Owners will be automatically requested for review when someone opens a PR that modifies matching files
+
+# Default owners for everything in the repo
+# These users will be requested for review unless a later match takes precedence
+* @teamlead @senior-dev
+
+# GitHub workflow files
+/.github/ @devops-team @teamlead
+
+# Configuration files
+*.json @teamlead @senior-dev
+*.yml @devops-team
+*.yaml @devops-team
+.eslintrc.json @teamlead
+tsconfig.json @teamlead @frontend-lead
+package.json @teamlead @senior-dev
+cypress.config.ts @qa-lead @senior-dev
+
+# Documentation
+*.md @teamlead @tech-writer
+/docs/ @tech-writer @teamlead
+README.md @teamlead @tech-writer
+CONTRIBUTING.md @teamlead @tech-writer
+TEAM_RULES.md @teamlead @engineering-manager
+CODE_OF_CONDUCT.md @engineering-manager @hr-team
+
+# Source code - Frontend
+/src/ @frontend-lead @senior-dev
+
+# Components - require frontend lead review
+/src/components/ @frontend-lead @ux-designer
+
+# Core application files - require team lead approval
+/src/App.tsx @teamlead @frontend-lead
+/src/index.tsx @teamlead @frontend-lead
+
+# Services and API - require backend knowledge
+/src/services/ @backend-lead @senior-dev
+/src/services/api.ts @backend-lead @frontend-lead
+
+# State management - require careful review
+/src/store/ @frontend-lead @senior-dev
+
+# Types - require careful review for breaking changes
+/src/types/ @frontend-lead @backend-lead
+
+# Utilities - can be reviewed by any senior
+/src/utils/ @senior-dev
+
+# Performance and monitoring - require performance expert
+/src/utils/performance.ts @performance-lead @senior-dev
+/src/hooks/usePerformanceMonitor.ts @performance-lead @frontend-lead
+/src/hooks/useMemoryLeakDetector.ts @performance-lead @senior-dev
+
+# Testing files
+*.test.ts @qa-lead @senior-dev
+*.test.tsx @qa-lead @frontend-lead
+*.spec.ts @qa-lead @senior-dev
+*.spec.tsx @qa-lead @frontend-lead
+/src/setupTests.ts @qa-lead @teamlead
+
+# E2E tests - require QA approval
+/cypress/ @qa-lead @frontend-lead
+
+# Build and deployment
+/build/ @devops-team
+Dockerfile @devops-team @senior-dev
+docker-compose.yml @devops-team
+
+# CI/CD pipelines - require DevOps approval
+/.github/workflows/ @devops-team @teamlead
+.husky/ @devops-team @teamlead
+
+# Security sensitive files - require security review
+.env.example @security-team @teamlead
+/src/services/api.ts @security-team @backend-lead
+
+# Public files
+/public/ @frontend-lead @ux-designer
+/public/index.html @frontend-lead @seo-specialist
+
+# Style files
+*.css @frontend-lead @ux-designer
+*.scss @frontend-lead @ux-designer
+
+# Package dependencies - require approval for changes
+package.json @teamlead @senior-dev
+package-lock.json @teamlead @devops-team
+
+# SonarQube and quality tools
+sonar-project.properties @qa-lead @teamlead
+
+# Critical paths that require multiple approvals
+/src/App.tsx @teamlead @frontend-lead @senior-dev
+/src/index.tsx @teamlead @frontend-lead @senior-dev
+/.github/workflows/ci.yml @devops-team @teamlead @senior-dev
+
+# Note: You can use GitHub teams instead of individual users
+# Format: @org/team-name
+# Example:
+# *.ts @your-org/frontend-team
+# /src/components/ @your-org/ui-team

@@ -1,0 +1,17 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Ask a Question
+    url: https://github.com/yourusername/subaccount-frontend/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: 📚 Documentation
+    url: https://github.com/yourusername/subaccount-frontend/wiki
+    about: Check our wiki for detailed documentation and guides
+  - name: 💼 Team Support
+    url: https://slack.com/your-workspace
+    about: Get help from team members in Slack (#help channel)
+  - name: 🔒 Security Issue
+    url: mailto:security@example.com
+    about: Report security vulnerabilities privately to our security team
+  - name: 🐛 Bug in Production
+    url: https://slack.com/your-workspace/channels/bugs
+    about: Report critical production bugs immediately in #bugs channel

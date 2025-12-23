@@ -1,0 +1,51 @@
+# Dependencies
+node_modules
+package-lock.json
+yarn.lock
+
+# Build outputs
+build
+dist
+coverage
+.cache
+
+# Generated files
+*.log
+*.tsbuildinfo
+react-app-env.d.ts
+
+# Configuration
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.config.js
+*.config.ts
+jest.config.js
+vite.config.ts
+vitest.config.ts
+tsconfig*.json
+
+# IDE
+.vscode
+.idea
+
+# Testing
+cypress
+cypress.config.ts
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+**/__tests__/**
+**/tests/**
+src/setupTests.ts
+
+# Misc
+public
+*.min.js
+*.min.css
+
+# Documentation
+CHANGELOG.md
