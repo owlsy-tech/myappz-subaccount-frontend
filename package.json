@@ -32,8 +32,9 @@
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
     "@vitejs/plugin-react": "^4.2.1",
-    "@vitest/coverage-v8": "^1.0.4",
-    "@vitest/ui": "^1.0.4",
+    "@vitest/coverage-v8": "^4.0.16",
+    "@vitest/ui": "^4.0.16",
+    "axios-mock-adapter": "^2.1.0",
     "eslint": "^8.56.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.1.0",
@@ -52,9 +53,9 @@
     "lint-staged": "^15.2.0",
     "prettier": "^3.1.1",
     "typescript": "^5.6.3",
-    "vite": "^5.0.10",
+    "vite": "^7.3.0",
     "vite-plugin-checker": "^0.6.2",
-    "vitest": "^1.0.4"
+    "vitest": "^4.0.16"
   },
   "scripts": {
     "dev": "vite",

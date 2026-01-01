@@ -49,26 +49,26 @@ describe('App', () => {
   });
 
   describe('Rendering', () => {
-    it('should render without crashing', () => {
+    it('should render without crashing', async () => {
       render(<App />);
       expect(screen.getByTestId('error-boundary')).toBeInTheDocument();
     });
 
-    it('should render Layout component', () => {
+    it('should render Layout component', async () => {
       render(<App />);
-      expect(screen.getByTestId('layout')).toBeInTheDocument();
+      expect(await screen.findByTestId('layout')).toBeInTheDocument();
     });
 
-    it('should render Home page on root route', () => {
+    it('should render Home page on root route', async () => {
       render(<App />);
-      expect(screen.getByTestId('home-page')).toBeInTheDocument();
+      expect(await screen.findByTestId('home-page')).toBeInTheDocument();
     });
   });
 
   describe('Error Boundary', () => {
-    it('should wrap application in ErrorBoundary', () => {
+    it('should wrap application in ErrorBoundary', async () => {
       render(<App />);
-      expect(screen.getByTestId('error-boundary')).toBeInTheDocument();
+      expect(await screen.findByTestId('error-boundary')).toBeInTheDocument();
     });
   });
 
@@ -77,10 +77,10 @@ describe('App', () => {
       vi.unstubAllEnvs();
     });
 
-    it('should render PerformanceMonitor in development mode', () => {
+    it('should render PerformanceMonitor in development mode', async () => {
       vi.stubEnv('MODE', 'development');
       render(<App />);
-      expect(screen.getByTestId('performance-monitor')).toBeInTheDocument();
+      expect(await screen.findByTestId('performance-monitor')).toBeInTheDocument();
     });
 
     it('should not render PerformanceMonitor in production mode', () => {
@@ -91,16 +91,16 @@ describe('App', () => {
   });
 
   describe('Routing', () => {
-    it('should use BrowserRouter for routing', () => {
+    it('should use BrowserRouter for routing', async () => {
       render(<App />);
       // Router is rendered implicitly through the app structure
-      expect(screen.getByTestId('layout')).toBeInTheDocument();
+      expect(await screen.findByTestId('layout')).toBeInTheDocument();
     });
 
-    it('should support lazy loading with Suspense', () => {
+    it('should support lazy loading with Suspense', async () => {
       render(<App />);
       // Suspense fallback would show during lazy loading
-      expect(screen.getByTestId('home-page')).toBeInTheDocument();
+      expect(await screen.findByTestId('home-page')).toBeInTheDocument();
     });
   });
 

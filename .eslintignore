@@ -34,13 +34,6 @@ tsconfig*.json
 # Testing
 cypress
 cypress.config.ts
-**/*.test.ts
-**/*.test.tsx
-**/*.spec.ts
-**/*.spec.tsx
-**/__tests__/**
-**/tests/**
-src/setupTests.ts
 
 # Misc
 public

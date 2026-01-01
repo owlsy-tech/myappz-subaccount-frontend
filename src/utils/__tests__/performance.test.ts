@@ -4,9 +4,6 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-// Unmock performance for its own tests
-vi.unmock('../performance');
-
 import {
   performanceMonitor,
   PerformanceMonitor,
@@ -16,6 +13,9 @@ import {
   logPerformance,
   detectPerformanceIssues,
 } from '../performance';
+
+// Unmock performance for its own tests
+vi.unmock('../performance');
 
 describe('Performance Utilities', () => {
   beforeEach(() => {
@@ -196,6 +196,71 @@ describe('Performance Utilities', () => {
       expect(ttfb).toBeNull();
     });
 
+    it('should return null TTFB in non-browser environment', () => {
+      const originalWindow = global.window;
+      // @ts-ignore
+      delete global.window;
+
+      const monitor = new PerformanceMonitor();
+      const ttfb = monitor.getTTFB();
+
+      expect(ttfb).toBeNull();
+
+      global.window = originalWindow;
+    });
+
+    it('should return null FCP in non-browser environment', () => {
+      const originalWindow = global.window;
+      // @ts-ignore
+      delete global.window;
+
+      const monitor = new PerformanceMonitor();
+      const fcp = monitor.getFCP();
+
+      expect(fcp).toBeNull();
+
+      global.window = originalWindow;
+    });
+
+    it('should return empty array for resource timings in non-browser environment', () => {
+      const originalWindow = global.window;
+      // @ts-ignore
+      delete global.window;
+
+      const monitor = new PerformanceMonitor();
+      const resources = monitor.getResourceTimings();
+
+      expect(resources).toEqual([]);
+
+      global.window = originalWindow;
+    });
+
+    it('should return null for navigation timing in non-browser environment', () => {
+      const originalWindow = global.window;
+      // @ts-ignore
+      delete global.window;
+
+      const monitor = new PerformanceMonitor();
+      const navigation = monitor.getNavigationTiming();
+
+      expect(navigation).toBeNull();
+
+      global.window = originalWindow;
+    });
+
+    it('should return null for memory usage in non-browser environment', () => {
+      const originalWindow = global.window;
+      // @ts-ignore
+      delete global.window;
+
+      const monitor = new PerformanceMonitor();
+      const memory = monitor.getMemoryUsage();
+
+      expect(memory).toBeNull();
+
+      global.window = originalWindow;
+    });
+
     it('should get FCP', () => {
       const mockPaintEntry = {
         name: 'first-contentful-paint',
@@ -313,25 +378,50 @@ describe('Performance Utilities', () => {
     });
 
     it('should return null when measurement fails', () => {
-      // Test with invalid marks - the function should handle errors
-      const duration = measurePerformance('test-measure', '', '');
+      vi.spyOn(performance, 'measure').mockImplementation(() => {
+        throw new Error('Measurement failed');
+      });
 
-      // Due to mocking, this may not actually be null
-      expect(typeof duration === 'number' || duration === null).toBe(true);
+      const duration = measurePerformance('test-measure', 'invalid-start', 'invalid-end');
+
+      expect(duration).toBeNull();
     });
 
     it('should return null when measure entry is not found', () => {
-      // In test environment, measure may return mock value
+      vi.spyOn(performance, 'measure').mockImplementation(() => {});
+      vi.spyOn(performance, 'getEntriesByName').mockReturnValue([]);
+
       const duration = measurePerformance('test-measure', 'start-mark', 'end-mark');
 
-      expect(typeof duration === 'number' || duration === null).toBe(true);
+      expect(duration).toBeNull();
     });
 
     it('should handle missing performance API', () => {
-      // Test passes if no error is thrown
+      const originalPerformance = global.performance;
+      // @ts-ignore
+      delete global.performance;
+
       const duration = measurePerformance('test-measure', 'start', 'end');
 
-      expect(typeof duration === 'number' || duration === null).toBe(true);
+      expect(duration).toBeNull();
+
+      global.performance = originalPerformance;
+    });
+
+    it('should return duration when measure succeeds', () => {
+      const mockMeasure = {
+        name: 'test-measure',
+        duration: 250.5,
+        entryType: 'measure',
+        startTime: 0,
+      };
+
+      vi.spyOn(performance, 'measure').mockImplementation(() => {});
+      vi.spyOn(performance, 'getEntriesByName').mockReturnValue([mockMeasure as any]);
+
+      const duration = measurePerformance('test-measure', 'start-mark', 'end-mark');
+
+      expect(duration).toBe(250.5);
     });
   });
 
@@ -359,6 +449,203 @@ describe('Performance Utilities', () => {
       const issues = detectPerformanceIssues(monitor, customThresholds);
 
       expect(Array.isArray(issues)).toBe(true);
+    });
+
+    it('should detect slow FCP', () => {
+      const monitor = new PerformanceMonitor();
+      vi.spyOn(performance, 'getEntriesByType').mockReturnValue([
+        { name: 'first-contentful-paint', startTime: 2000 } as any,
+      ]);
+
+      const issues = detectPerformanceIssues(monitor);
+      const fcpIssue = issues.find((issue) => issue.includes('FCP'));
+
+      expect(fcpIssue).toBeDefined();
+    });
+
+    it('should detect slow LCP', () => {
+      const monitor = new PerformanceMonitor();
+      monitor.recordMetric({
+        name: 'LCP',
+        value: 3000,
+        unit: 'ms',
+        timestamp: Date.now(),
+      });
+
+      const issues = detectPerformanceIssues(monitor);
+      const lcpIssue = issues.find((issue) => issue.includes('LCP'));
+
+      expect(lcpIssue).toBeDefined();
+    });
+
+    it('should detect high FID', () => {
+      const monitor = new PerformanceMonitor();
+      monitor.recordMetric({
+        name: 'FID',
+        value: 150,
+        unit: 'ms',
+        timestamp: Date.now(),
+      });
+
+      const issues = detectPerformanceIssues(monitor);
+      const fidIssue = issues.find((issue) => issue.includes('FID'));
+
+      expect(fidIssue).toBeDefined();
+    });
+
+    it('should detect high CLS', () => {
+      const monitor = new PerformanceMonitor();
+      monitor.recordMetric({
+        name: 'CLS',
+        value: 0.2,
+        unit: 'score',
+        timestamp: Date.now(),
+      });
+
+      const issues = detectPerformanceIssues(monitor);
+      const clsIssue = issues.find((issue) => issue.includes('CLS'));
+
+      expect(clsIssue).toBeDefined();
+    });
+
+    it('should detect slow TTFB', () => {
+      const monitor = new PerformanceMonitor();
+      vi.spyOn(performance, 'getEntriesByType').mockReturnValue([
+        { responseStart: 1000, requestStart: 100 } as any,
+      ]);
+
+      const issues = detectPerformanceIssues(monitor);
+      const ttfbIssue = issues.find((issue) => issue.includes('TTFB'));
+
+      expect(ttfbIssue).toBeDefined();
+    });
+
+    it('should detect high memory usage', () => {
+      const monitor = new PerformanceMonitor();
+      Object.defineProperty(performance, 'memory', {
+        value: {
+          usedJSHeapSize: 85000000,
+          totalJSHeapSize: 90000000,
+          jsHeapSizeLimit: 100000000,
+        },
+        configurable: true,
+      });
+
+      const issues = detectPerformanceIssues(monitor);
+      const memoryIssue = issues.find((issue) => issue.includes('memory'));
+
+      expect(memoryIssue).toBeDefined();
+    });
+
+    it('should detect too many long tasks', () => {
+      const monitor = new PerformanceMonitor();
+      for (let i = 0; i < 15; i++) {
+        monitor.recordMetric({
+          name: 'LongTask',
+          value: 100,
+          unit: 'ms',
+          timestamp: Date.now(),
+        });
+      }
+
+      const issues = detectPerformanceIssues(monitor);
+      const longTaskIssue = issues.find((issue) => issue.includes('long tasks'));
+
+      expect(longTaskIssue).toBeDefined();
+    });
+
+    it('should not detect issues when metrics are within thresholds', () => {
+      const monitor = new PerformanceMonitor();
+
+      // Mock getEntriesByType to return empty arrays so FCP/TTFB won't be detected
+      vi.spyOn(performance, 'getEntriesByType').mockReturnValue([]);
+
+      // Mock memory to be low
+      Object.defineProperty(performance, 'memory', {
+        value: {
+          usedJSHeapSize: 50000000,
+          totalJSHeapSize: 90000000,
+          jsHeapSizeLimit: 100000000,
+        },
+        configurable: true,
+      });
+
+      monitor.recordMetric({
+        name: 'LCP',
+        value: 1000,
+        unit: 'ms',
+        timestamp: Date.now(),
+      });
+      monitor.recordMetric({
+        name: 'FID',
+        value: 50,
+        unit: 'ms',
+        timestamp: Date.now(),
+      });
+      monitor.recordMetric({
+        name: 'CLS',
+        value: 0.05,
+        unit: 'score',
+        timestamp: Date.now(),
+      });
+
+      const issues = detectPerformanceIssues(monitor);
+
+      expect(issues.length).toBe(0);
+    });
+
+    it('should handle all issues at once', () => {
+      const monitor = new PerformanceMonitor();
+
+      // Add slow FCP
+      vi.spyOn(performance, 'getEntriesByType').mockReturnValue([
+        { name: 'first-contentful-paint', startTime: 2000 } as any,
+        { responseStart: 1000, requestStart: 100 } as any,
+      ]);
+
+      // Add slow metrics
+      monitor.recordMetric({
+        name: 'LCP',
+        value: 3000,
+        unit: 'ms',
+        timestamp: Date.now(),
+      });
+      monitor.recordMetric({
+        name: 'FID',
+        value: 150,
+        unit: 'ms',
+        timestamp: Date.now(),
+      });
+      monitor.recordMetric({
+        name: 'CLS',
+        value: 0.2,
+        unit: 'score',
+        timestamp: Date.now(),
+      });
+
+      // Add long tasks
+      for (let i = 0; i < 15; i++) {
+        monitor.recordMetric({
+          name: 'LongTask',
+          value: 100,
+          unit: 'ms',
+          timestamp: Date.now(),
+        });
+      }
+
+      // Add high memory
+      Object.defineProperty(performance, 'memory', {
+        value: {
+          usedJSHeapSize: 85000000,
+          totalJSHeapSize: 90000000,
+          jsHeapSizeLimit: 100000000,
+        },
+        configurable: true,
+      });
+
+      const issues = detectPerformanceIssues(monitor);
+
+      expect(issues.length).toBeGreaterThan(5);
     });
   });
 

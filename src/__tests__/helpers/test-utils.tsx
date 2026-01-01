@@ -142,7 +142,7 @@ export const mockScrollTo = () => {
  * Mock IntersectionObserver
  */
 export const mockIntersectionObserver = () => {
-  global.IntersectionObserver = class IntersectionObserver {
+  globalThis.IntersectionObserver = class IntersectionObserver {
     constructor() {}
 
     disconnect() {}
@@ -275,7 +275,7 @@ export const suppressConsole = (methods: ('error' | 'warn' | 'log' | 'debug')[] 
  * Wait for async operations to complete
  */
 export const flushPromises = () => {
-  return new Promise((resolve) => setImmediate(resolve));
+  return new Promise((resolve) => setTimeout(resolve));
 };
 
 /**

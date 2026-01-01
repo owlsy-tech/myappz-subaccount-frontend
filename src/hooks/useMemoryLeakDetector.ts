@@ -55,8 +55,8 @@ export const useMemoryLeakDetector = (
 } => {
   const opts = useMemo(() => ({ ...DEFAULT_OPTIONS, ...options }), [options]);
   const [warnings, setWarnings] = useState<IMemoryLeakWarning[]>([]);
-  const activeTimers = useRef<Set<NodeJS.Timeout>>(new Set());
-  const activeIntervals = useRef<Set<NodeJS.Timeout>>(new Set());
+  const activeTimers = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
+  const activeIntervals = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
   const activeListeners = useRef<Map<string, EventListenerOrEventListenerObject>>(new Map());
   const initialMemory = useRef<IMemoryUsage | null>(null);
   const memorySnapshots = useRef<IMemoryUsage[]>([]);
@@ -318,7 +318,7 @@ export const useTrackedTimeout = (
   delay: number | null,
   componentName?: string
 ): void => {
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (delay === null) {
@@ -344,7 +344,7 @@ export const useTrackedInterval = (
   delay: number | null,
   componentName?: string
 ): void => {
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (delay === null) {
