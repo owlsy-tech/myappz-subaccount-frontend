@@ -516,19 +516,20 @@ describe('ApiClient - Interceptor Tests', () => {
         return [500, { message: 'Server error' }];
       });
 
-      const promise = apiClient.get('/test');
+      const promise = apiClient.get('/test').catch((error) => {
+        // Expected to fail after retries
+        return error;
+      });
 
       // Fast forward through retries
-      for (let i = 0; i < 3; i++) {
-        await vi.advanceTimersByTimeAsync(1000 * (i + 1));
-      }
-
-      try {
-        await promise;
-      } catch (error) {
-        // Expected
-      }
-
+      
+      await vi.advanceTimersByTimeAsync(1000);
+      await vi.advanceTimersByTimeAsync(2000);
+      await vi.advanceTimersByTimeAsync(3000);
+      
+      await promise;
+      // Expected to fail after retries
+      expect(callCount).toBe(4);
       vi.useRealTimers();
     });
   });
