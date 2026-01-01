@@ -5,8 +5,9 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import Home from './Home';
 import * as hooks from '../../hooks';
+
+import Home from './Home';
 
 // Mock the hooks
 vi.mock('../../hooks', () => ({

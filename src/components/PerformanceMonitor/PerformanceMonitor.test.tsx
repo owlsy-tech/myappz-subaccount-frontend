@@ -121,7 +121,7 @@ describe('PerformanceMonitor', () => {
   });
 
   it('should render minimized initially when minimized prop is true', () => {
-    render(<PerformanceMonitor minimized={true} />);
+    render(<PerformanceMonitor minimized />);
     expect(screen.queryByText('Web Vitals')).not.toBeInTheDocument();
   });
 
@@ -135,7 +135,7 @@ describe('PerformanceMonitor', () => {
   });
 
   it('should expand when minimized and expand button is clicked', () => {
-    render(<PerformanceMonitor minimized={true} />);
+    render(<PerformanceMonitor minimized />);
 
     const expandButton = screen.getByRole('button', { name: /Expand performance monitor/i });
     fireEvent.click(expandButton);

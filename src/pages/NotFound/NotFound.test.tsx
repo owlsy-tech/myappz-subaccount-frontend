@@ -3,8 +3,8 @@
  */
 
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import NotFound from './NotFound';
 
@@ -101,7 +101,7 @@ describe('NotFound', () => {
 
   it('should change background color on home link hover', () => {
     renderWithRouter(<NotFound />);
-    const homeLink = screen.getByRole('link', { name: /Go to Home/i }) as HTMLAnchorElement;
+    const homeLink = screen.getByRole('link', { name: /Go to Home/i });
 
     // Initial state
     expect(homeLink.style.backgroundColor).toBe('rgb(66, 153, 225)');
@@ -117,7 +117,7 @@ describe('NotFound', () => {
 
   it('should change background color on home link focus', () => {
     renderWithRouter(<NotFound />);
-    const homeLink = screen.getByRole('link', { name: /Go to Home/i }) as HTMLAnchorElement;
+    const homeLink = screen.getByRole('link', { name: /Go to Home/i });
 
     // Initial state
     expect(homeLink.style.backgroundColor).toBe('rgb(66, 153, 225)');
@@ -133,7 +133,7 @@ describe('NotFound', () => {
 
   it('should change background color on back button hover', () => {
     renderWithRouter(<NotFound />);
-    const backButton = screen.getByRole('button', { name: /Go Back/i }) as HTMLButtonElement;
+    const backButton = screen.getByRole('button', { name: /Go Back/i });
 
     // Initial state
     expect(backButton.style.backgroundColor).toBe('rgb(237, 242, 247)');
@@ -149,7 +149,7 @@ describe('NotFound', () => {
 
   it('should change background color on back button focus', () => {
     renderWithRouter(<NotFound />);
-    const backButton = screen.getByRole('button', { name: /Go Back/i }) as HTMLButtonElement;
+    const backButton = screen.getByRole('button', { name: /Go Back/i });
 
     // Initial state
     expect(backButton.style.backgroundColor).toBe('rgb(237, 242, 247)');
